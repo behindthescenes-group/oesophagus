@@ -1,3 +1,6 @@
 .vscode/
 producers/*/env/
 consumers/*/env/
+
+producers/*/.env
+consumers/*/.env

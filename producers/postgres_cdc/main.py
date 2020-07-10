@@ -1,9 +1,11 @@
 import os
 import psycopg2
+import psycopg2.extras
 import logging
 import time
 from kafka import KafkaProducer
 import json
+from dotenv import load_dotenv
 
 
 class PostgresCDC:
@@ -63,16 +65,20 @@ class PostgresCDC:
                     logging.error(e)
 
 
-def send_to_kafka(record):
-    producer.send(topic=record['table'], value=record)
+def send_to_kafka(msg):
+    logging.info("Stream msg: " + msg.payload)
+    # for record in msg.payload['change']:
+    #     producer.send(topic=record['table'], value=record)
 
 
 if __name__ == "__main__":
-    producer = KafkaProducer(bootstrap_servers=['localhost:9092'],
-                             value_serializer=lambda x:
-                             json.dumps(x).encode('utf-8'))
+    logging.basicConfig(format='%(asctime)s - %(levelname)s - %(message)s',
+                        datefmt='%m/%d/%Y %I:%M:%S %p', level=logging.DEBUG)
+    # producer = KafkaProducer(bootstrap_servers=[
+    #                          'localhost:9092'], value_serializer=lambda x: json.dumps(x).encode('utf-8'))
+    load_dotenv(verbose=True)
     cdc = PostgresCDC(
-        os.environ['HOST'], os.environ['PORT'], os.environ['DBNAME'], os.environ['USER'], os.environ['PASSWORD'], os.environ['REPLICATION_SLOT'])
+        os.getenv('POSTGRES_HOST'), os.getenv('POSTGRES_PORT'), os.getenv('POSTGRES_DBNAME'), os.getenv('POSTGRES_USER'), os.getenv('POSTGRES_PASSWORD'), os.getenv('POSTGRES_REPLICATION_SLOT'))
     cdc.start_replication_server()
     cdc.start_streaming(send_to_kafka)
-    producer.close()
+    # producer.close()
