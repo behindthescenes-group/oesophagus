@@ -1,0 +1,19 @@
+{
+  "name": "event_reader",
+  "config": {
+    "connector.class": "io.debezium.connector.postgresql.PostgresConnector",
+    "plugin.name": "wal2json",
+    "database.hostname": "postgres",
+    "database.port": "5432",
+    "database.user": "POSTGRES_USER",
+    "database.password": "POSTGRES_PASSWORD",
+    "database.dbname": "POSTGRES_DB",
+    "database.server.name": "POSTGRES_DB",
+    "table.whitelist": "public.brands,public.brand_products",
+    "transforms": "unwrap",
+    "transforms.unwrap.type": "io.debezium.transforms.ExtractNewRecordState",
+    "transforms.unwrap.drop.tombstones": "false",
+    "transforms.unwrap.delete.handling.mode": "rewrite",
+    "snapshot.mode": "always"
+  }
+}

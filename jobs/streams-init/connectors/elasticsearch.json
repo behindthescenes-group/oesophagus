@@ -1,0 +1,11 @@
+{
+  "name": "enriched_writer",
+  "config": {
+    "connector.class": "io.confluent.connect.elasticsearch.ElasticsearchSinkConnector",
+    "connection.url": "http://elasticsearch:9200",
+    "connection.username": "elastic",
+    "connection.password": "ELASTIC_PASSWORD",
+    "type.name": "_doc",
+    "topics": "enriched_brands,enriched_brand_products"
+  }
+}

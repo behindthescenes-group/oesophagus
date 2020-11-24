@@ -1,0 +1,3 @@
+{
+  "schema": "{\"type\":\"record\",\"name\":\"Value\",\"namespace\":\"store.public.brand_products\",\"fields\":[{\"name\":\"id\",\"type\":\"int\"},{\"name\":\"brand_id\",\"type\":\"int\"},{\"name\":\"name\",\"type\":[\"null\",\"string\"],\"default\":null},{\"name\":\"__deleted\",\"type\":[\"null\",\"string\"],\"default\":null}],\"connect.name\":\"store.public.brand_products.Value\"}"
+}
