@@ -84,8 +84,8 @@ services:
     ports:
       - "8088:8088"
     volumes:
-      - "./pipelines/confluent-hub-components/:/usr/share/kafka/plugins/"
-      - "./pipelines/stream-setup.sql:/stream-setup.sql"
+      - "./producers/debezium-debezium-connector-postgresql/:/usr/share/kafka/plugins/debezium-debezium-connector-postgresql/"
+      - "./consumers/confluentinc-kafka-connect-elasticsearch/:/usr/share/kafka/plugins/confluentinc-kafka-connect-elasticsearch/"
     environment:
       KSQL_LISTENERS: "http://0.0.0.0:8088"
       KSQL_BOOTSTRAP_SERVERS: "broker:9092"
