@@ -44,9 +44,6 @@ $ curl -f 'localhost:9200'
 
 # Search all indices in Elasticsearch
 $ curl -f 'localhost:9200/_search'
-
-# Check logs of oesophagus to debug any issues
-$ docker logs oesophagus
 ```
 
 ## Why use Oesophagus's Postgres CDC?
