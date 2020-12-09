@@ -19,17 +19,6 @@ IFS=', ' read -r -a kafkaTopicsArray <<< "$kafkatopicsArrayString"
 # A separate variable for zookeeper hosts.
 zookeeperHostsValue=$ZOOKEEPER_HOSTS
 
-# Create kafka topic for each topic item from split array of topics.
-for newTopic in "${kafkaTopicsArray[@]}"; do
-    # https://kafka.apache.org/quickstart
-    curl http://elasticsearch:9200/enriched_$newTopic/_search --user elastic:${ELASTIC_PASSWORD}
-    curl -X DELETE http://schema-registry:8081/subjects/store.public.$newTopic-value
-    kafka-topics --create --topic "store.public.$newTopic" --partitions 1 --replication-factor 1 --if-not-exists --zookeeper "$zookeeperHostsValue"
-    curl -X POST -H "Content-Type: application/vnd.schemaregistry.v1+json" --data @schemas/$newTopic.json http://schema-registry:8081/subjects/store.public.$newTopic-value/versions
-
-
-done
-
 # Terminate all queries
 curl -s -X "POST" "http://ksqldb-server:8088/ksql" \
          -H "Content-Type: application/vnd.ksql.v1+json; charset=utf-8" \
@@ -59,6 +48,16 @@ curl -s -X "POST" "http://ksqldb-server:8088/ksql" \
     xargs -Ifoo curl -X "POST" "http://ksqldb-server:8088/ksql" \
              -H "Content-Type: application/vnd.ksql.v1+json; charset=utf-8" \
              -d '{"ksql": "DROP STREAM \"foo\";"}'
+             
+# Create kafka topic for each topic item from split array of topics.
+for newTopic in "${kafkaTopicsArray[@]}"; do
+    # https://kafka.apache.org/quickstart
+    curl http://elasticsearch:9200/enriched_$newTopic/_search --user elastic:${ELASTIC_PASSWORD}
+    curl -X DELETE http://schema-registry:8081/subjects/store.public.$newTopic-value
+    kafka-topics --create --topic "store.public.$newTopic" --partitions 1 --replication-factor 1 --if-not-exists --zookeeper "$zookeeperHostsValue"
+    curl -X POST -H "Content-Type: application/vnd.schemaregistry.v1+json" --data @schemas/$newTopic.json http://schema-registry:8081/subjects/store.public.$newTopic-value/versions
+
+done
 
 curl -X "POST" "http://ksqldb-server:8088/ksql" -H "Accept: application/vnd.ksql.v1+json" -d $'{ "ksql": "CREATE STREAM \\"brands\\" WITH (kafka_topic = \'store.public.brands\', value_format = \'avro\');", "streamsProperties": {} }'
 curl -X "POST" "http://ksqldb-server:8088/ksql" -H "Accept: application/vnd.ksql.v1+json" -d $'{ "ksql": "CREATE STREAM \\"enriched_brands\\" WITH ( kafka_topic = \'enriched_brands\' ) AS SELECT CAST(brand.id AS VARCHAR) as \\"id\\", brand.tenant_id as \\"tenant_id\\", brand.name as \\"name\\" from \\"brands\\" brand partition by CAST(brand.id AS VARCHAR) EMIT CHANGES;", "streamsProperties": {} }'
