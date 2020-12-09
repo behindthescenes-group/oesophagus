@@ -22,9 +22,10 @@ zookeeperHostsValue=$ZOOKEEPER_HOSTS
 # Create kafka topic for each topic item from split array of topics.
 for newTopic in "${kafkaTopicsArray[@]}"; do
     # https://kafka.apache.org/quickstart
-    kafka-topics --create --topic "$POSTGRES_DB.public.$newTopic" --partitions 1 --replication-factor 1 --if-not-exists --zookeeper "$zookeeperHostsValue"
-    curl -X DELETE http://schema-registry:8081/subjects/$POSTGRES_DB.public.$newTopic-value
-    curl -X POST -H "Content-Type: application/vnd.schemaregistry.v1+json" --data @schemas/$newTopic.json http://schema-registry:8081/subjects/$POSTGRES_DB.public.$newTopic-value/versions
+    curl http://elasticsearch:9200/enriched_$newTopic/_search --user elastic:${ELASTIC_PASSWORD}
+    curl -X DELETE http://schema-registry:8081/subjects/store.public.$newTopic-value
+    kafka-topics --create --topic "store.public.$newTopic" --partitions 1 --replication-factor 1 --if-not-exists --zookeeper "$zookeeperHostsValue"
+    curl -X POST -H "Content-Type: application/vnd.schemaregistry.v1+json" --data @schemas/$newTopic.json http://schema-registry:8081/subjects/store.public.$newTopic-value/versions
 
 
 done
