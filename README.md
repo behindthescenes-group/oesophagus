@@ -27,12 +27,8 @@ The architecture consists of:
 
 ## Deployment
 
-**IMPORTANT:** `wal2json` plugin must be installed on the source postgres database.
-
-Update `producer.json` file with your postgres connection configs. Then run:
-
 ```sh
-# Start oesophagus, producers and consumers
+# Start kafka, connect, schema-registry, ksqldb, ksqlcli, postgres, elasticsearch and automation-scripts
 $ docker-compose up -d
 ```
 
