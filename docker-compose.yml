@@ -28,7 +28,7 @@ services:
       - project_network
 
   zookeeper:
-    image: confluentinc/cp-zookeeper:5.5.0
+    image: confluentinc/cp-zookeeper:6.0.0
     hostname: zookeeper
     container_name: zookeeper
     ports:
@@ -40,7 +40,7 @@ services:
       - project_network
 
   broker:
-    image: confluentinc/cp-enterprise-kafka:5.5.0
+    image: confluentinc/cp-enterprise-kafka:6.0.0
     hostname: broker
     container_name: broker
     depends_on:
@@ -60,7 +60,7 @@ services:
       - project_network
 
   schema-registry:
-    image: confluentinc/cp-schema-registry:5.5.0
+    image: confluentinc/cp-schema-registry:6.0.0
     hostname: schema-registry
     container_name: schema-registry
     depends_on:
@@ -75,7 +75,7 @@ services:
       - project_network
 
   ksqldb-server:
-    image: confluentinc/ksqldb-server:0.11.0
+    image: confluentinc/cp-ksqldb-server:6.0.0
     hostname: ksqldb-server
     container_name: ksqldb-server
     depends_on:
@@ -92,25 +92,12 @@ services:
       KSQL_KSQL_SCHEMA_REGISTRY_URL: "http://schema-registry:8081"
       KSQL_KSQL_LOGGING_PROCESSING_STREAM_AUTO_CREATE: "true"
       KSQL_KSQL_LOGGING_PROCESSING_TOPIC_AUTO_CREATE: "true"
-      KSQL_CONNECT_GROUP_ID: "ksql-connect-cluster"
-      KSQL_CONNECT_BOOTSTRAP_SERVERS: "broker:9092"
-      KSQL_CONNECT_KEY_CONVERTER: "io.confluent.connect.avro.AvroConverter"
-      KSQL_CONNECT_VALUE_CONVERTER: "io.confluent.connect.avro.AvroConverter"
-      KSQL_CONNECT_KEY_CONVERTER_SCHEMA_REGISTRY_URL: "http://schema-registry:8081"
-      KSQL_CONNECT_VALUE_CONVERTER_SCHEMA_REGISTRY_URL: "http://schema-registry:8081"
-      KSQL_CONNECT_VALUE_CONVERTER_SCHEMAS_ENABLE: "false"
-      KSQL_CONNECT_CONFIG_STORAGE_TOPIC: "ksql-connect-configs"
-      KSQL_CONNECT_OFFSET_STORAGE_TOPIC: "ksql-connect-offsets"
-      KSQL_CONNECT_STATUS_STORAGE_TOPIC: "ksql-connect-statuses"
-      KSQL_CONNECT_CONFIG_STORAGE_REPLICATION_FACTOR: 1
-      KSQL_CONNECT_OFFSET_STORAGE_REPLICATION_FACTOR: 1
-      KSQL_CONNECT_STATUS_STORAGE_REPLICATION_FACTOR: 1
-      KSQL_CONNECT_PLUGIN_PATH: "/usr/share/kafka/plugins"
+      KSQL_KSQL_STREAMS_MAX_TASK_IDLE_MS: 2500
     networks:
       - project_network
 
   ksqldb-cli:
-    image: confluentinc/ksqldb-cli:0.11.0
+    image: confluentinc/cp-ksqldb-cli:6.0.0
     container_name: ksqldb-cli
     depends_on:
       - broker
@@ -121,7 +108,7 @@ services:
       - project_network
 
   connect:
-    image: confluentinc/cp-kafka-connect:5.4.3
+    image: confluentinc/cp-kafka-connect:6.0.0
     hostname: connect
     container_name: connect
     volumes:
