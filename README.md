@@ -4,9 +4,9 @@
 
 Will help in shaping initial features.
 
-Read more about it on my Blog at Towards Data Science: https://tinyurl.com/yyqr79dh
-
 ---
+
+Read more about it on my Blog at Towards Data Science: https://tinyurl.com/yyqr79dh
 
 # Oesophagus Ecosystem
 
