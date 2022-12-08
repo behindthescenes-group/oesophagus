@@ -1,5 +1,5 @@
 astroid==2.4.2
-certifi==2020.6.20
+certifi==2022.12.7
 elasticsearch==7.8.0
 isort==4.3.21
 lazy-object-proxy==1.4.3
